@@ -53,10 +53,14 @@ app.get("/", (req, res) => {
 app.get("/view", (req, res) => {
   const blogIndex = parseInt(req.query.blogIndex);
   const sourcetype = req.query.sourceType;
-  if (sourcetype == "home") {
-    res.render("view.ejs", { blog: blogsPreview[blogIndex], sourcetype: "/" });
-  } else if (sourcetype == "explore") {
-    res.render("view.ejs", { blog: ranBlogs[blogIndex], sourcetype: "/" });
+  const filter = req.query.filter;  
+  if (sourcetype === "home") {
+    res.render("view.ejs", { blog: blogsPreview[blogIndex], backUrl: "/" });
+  } else if (sourcetype === "explore") {
+    const backUrl = filter ? `/explore?filter=${filter}` : "/explore";
+    res.render("view.ejs", { blog: ranBlogs[blogIndex], backUrl });
+  } else {
+    res.render("view.ejs", { blog: blogsPreview[blogIndex], backUrl: "/" });
   }
 });
 
@@ -105,22 +109,53 @@ app.post("/myblog", (req, res) => {
 
 app.get("/edit", (req, res) => {
   const blogIndex = parseInt(req.query.blogIndex);
-  res.render("create.ejs", { blog: myblogs[blogIndex] });
   if (blogIndex >= 0 && blogIndex < myblogs.length) {
-    myblogs.splice(blogIndex, 1);
+    res.render("create.ejs", { blog: myblogs[blogIndex], blogIndex });
+  } else {
+    res.redirect("/myblog"); 
   }
+});
+
+app.post("/edit", (req, res) => {
+  const blogIndex = parseInt(req.body.blogIndex);
+  if (blogIndex >= 0 && blogIndex < myblogs.length) {
+    const updatedBlog = {
+      title: req.body.title,
+      author: req.body.author,
+      topic: req.body.topic,
+      content: req.body.content,
+      publishDate: formattedDate,
+    };
+    myblogs[blogIndex] = updatedBlog;
+    const allIndex = allblogs.findIndex(
+      (b) =>
+        b.title === myblogs[blogIndex].title &&
+        b.author === myblogs[blogIndex].author &&
+        b.publishDate === myblogs[blogIndex].publishDate
+    );
+    if (allIndex > -1) {
+      allblogs[allIndex] = updatedBlog;
+    }
+  }
+  res.redirect("/myblog");
 });
 
 app.get("/delete", (req, res) => {
   const blogIndex = parseInt(req.query.blogIndex);
-  const index = allblogs.indexOf(myblogs[blogIndex]);
-  if (index > -1) {
-    allblogs.splice(index, 1);
-  }
   if (blogIndex >= 0 && blogIndex < myblogs.length) {
+    const blogToDelete = myblogs[blogIndex];
+    const indexInAll = allblogs.findIndex(
+      (b) =>
+        b.title === blogToDelete.title &&
+        b.author === blogToDelete.author &&
+        b.publishDate === blogToDelete.publishDate
+    );
+    if (indexInAll > -1) {
+      allblogs.splice(indexInAll, 1);
+    }
     myblogs.splice(blogIndex, 1);
   }
-  res.render("myblog.ejs", { blogs: myblogs });
+  res.redirect("/myblog");
 });
 
 blogsPreview.push({
@@ -224,6 +259,7 @@ allblogs.push(
       "With climate change and environmental degradation posing serious threats globally, sustainable living has become more critical than ever. Individuals and communities can contribute by adopting simple yet impactful habits such as reducing waste, conserving water, using renewable energy, and supporting eco-friendly products. Governments and organizations are also implementing policies aimed at reducing carbon footprints and protecting biodiversity. Collective action and education are vital to ensuring a healthy planet for future generations, making environmental responsibility a shared priority.",
   }
 );
+
 allblogs.push(
   {
     title: "The Art of Minimalist Living: Finding Joy in Simplicity",
@@ -242,9 +278,11 @@ allblogs.push(
       "Procrastination affects everyone at some point, often leading to stress, missed deadlines, and reduced productivity. Psychologists link it to emotional regulation, perfectionism, fear of failure, and even low self-esteem. Rather than being lazy, procrastinators often feel overwhelmed by tasks they perceive as unpleasant or high-pressure. Overcoming procrastination involves breaking tasks into smaller steps, setting clear goals, and using strategies like time-blocking and accountability. Mindfulness and cognitive behavioral techniques can also help reframe negative thoughts that trigger avoidance. Understanding the root causes empowers individuals to replace delay with action and build healthier, more productive habits.",
   }
 );
+
 app.get("/about",(req,res)=>{
   res.render("about.ejs");
 })
+
 blogsPreview = blogsPreview.map((blog) => ({
   ...blog,
   content: he.decode(blog.content),

@@ -1,0 +1,39 @@
+<%- include("partials/header.ejs") %>
+    <link href="/css/home.css" rel="stylesheet">
+    <header class="masthead" style="background-image: url('images/download.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <h1>ThoughtStream</h1>
+                        <span class="subheading">Bold ideas, simply written here.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <% blogpreviews.forEach((blog, index)=> { %>
+                    <% if(index !=0) { %>
+                        <hr class="my-4">
+                        <% } %>
+                            <div class="post-preview">
+                                <form id="myForm-<%= index %>" action="/view" method="get" style="display: none;">
+                                    <input type="hidden" name="blogIndex" value="<%= index %>" />
+                                    <input type="hidden" name="sourceType" value="home" />
+                                </form>
+                                <h2 class="post-title"
+                                    onclick="document.getElementById('myForm-<%= index %>').submit();">
+                                    <%= blog.title %>
+                                </h2>
+                                <p class="post-meta">
+                                    Posted by <%= blog.author %> on <%= blog.publishDate %>
+                                </p>
+                            </div>
+                            <% }); %>
+            </div>
+        </div>
+    </div>
+    <%- include("partials/footer.ejs") %>

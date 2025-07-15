@@ -1,0 +1,26 @@
+<%- include("partials/header.ejs") %>
+    <link href="/css/view.css" rel="stylesheet">
+    <div class="wrapper mt-3 pt-5">
+        <div class="mb-4 mt-3">
+            <a href="<%=sourcetype %>" class="btn btn-secondary">&larr; Back</a>
+        </div>
+
+        <div class="card shadow-sm p-4">
+            <h1 class="card-title mb-3">
+                <%= blog.title %>
+            </h1>
+            <h6 class="text-muted mb-4">
+                By <strong>
+                    <%= blog.author %>
+                </strong> | <em>
+                    <%= blog.publishDate %>
+                </em>
+            </h6>
+            <hr>
+            <div class="card-text">
+                <%= blog.content %>
+            </div>
+        </div>
+    </div>
+
+    <%- include("partials/footer.ejs") %>

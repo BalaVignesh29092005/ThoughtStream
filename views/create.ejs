@@ -1,0 +1,33 @@
+<%- include("partials/header.ejs") %>
+  <div class="container">
+    <div class="mb-3 mt-4 pt-5 ">
+      <% if(locals.blog) { titleVal=blog.title; authorVal=blog.author; contentVal=blog.content; } else{
+        titleVal=authorVal=contentVal="" ; }%>
+        <form action="../myblog" method="post">
+          <label class="form-label mt-5 pt-2">Title</label>
+          <input type="text" class="form-control mb-3" id="title" name="title" value="<%= titleVal %>" required>
+
+          <label class="form-label">Author</label>
+          <input type="text" class="form-control mb-3" id="author" name="author" value="<%= authorVal %>" required>
+
+          <label class="form-label">Blog Topic:</label>
+          <select id="topic" name="topic" class="form-control mb-3" required>
+            <option value="" disabled selected>Select</option>
+            <option value="Buisness" <%=locals.blog?.topic==='Buisness' ? 'selected' : '' %>>Buisness</option>
+            <option value="Technology" <%=locals.blog?.topic==='Technology' ? 'selected' : '' %>>Technology</option>
+            <option value="Eduction" <%=locals.blog?.topic==='Eduction' ? 'selected' : '' %>>Education</option>
+            <option value="Enviroment" <%=locals.blog?.topic==='Enviroment' ? 'selected' : '' %>>Environment</option>
+            <option value="Sports" <%=locals.blog?.topic==='Sports' ? 'selected' : '' %>>Sports</option>
+            <option value="Others" <%=locals.blog?.topic==='Others' ? 'selected' : '' %>>Others</option>
+          </select>
+
+          <label class="form-label">Content</label>
+          <textarea class="form-control mb-3" id="content" name="content" rows="10"><%= contentVal %></textarea>
+
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary mt-4 px-3 py-2" type="submit">Post</button>
+          </div>
+        </form>
+
+    </div>
+    <%- include("partials/footer.ejs") %>

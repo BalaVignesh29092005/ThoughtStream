@@ -1,0 +1,53 @@
+<%- include("partials/header.ejs") %>
+<link href="/css/myblog.css" rel="stylesheet">
+
+<% if (blogs.length == 0) { %>
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+      <img src="images/create.png" class="img-fluid mb-3" width="300px" height="300px" alt="Centered Image">
+      <h1>Create your own Blog</h1>
+      <form action="/create" method="get">
+        <button class="btn btn-primary mt-4" type="submit">Create</button>
+      </form>
+    </div>
+  </div>
+<% } else { %>
+  <div class="mt-5 pt-5 container-fluid px-5">
+    <% blogs.forEach((blog, index) => { %>
+      <% if (index !== 0) { %>
+        <hr class="my-4">
+      <% } %>
+
+      <div class="post-preview">
+        <form id="viewForm-<%= index %>" action="/view" method="get" style="display: none;">
+          <input type="hidden" name="blogIndex" value="<%= index %>" />
+        </form>
+
+        <h2 class="post-title mt-5 pt-2" style="cursor:pointer;" onclick="document.getElementById('viewForm-<%= index %>').submit();">
+          <%= blog.title %>
+        </h2>
+
+        <p class="post-meta mb-3">
+          Posted by <%= blog.author %><br>
+          <%= blog.content.slice(0, 215) %>...<br>
+          on <%= blog.publishDate %>
+        </p>
+
+        <!-- Action buttons -->
+        <div class="d-flex justify-content-end gap-3">
+          <form action="../edit" method="get">
+            <input type="hidden" name="blogIndex" value="<%= index %>">
+            <button type="submit" class="btn btn-sm btn-warning">Edit</button>
+          </form>
+          <form action="../delete" method="get">
+            <input type="hidden" name="blogIndex" value="<%= index %>">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+    <a href="/create" class="btn btn-primary fab-button px-2">+</a>
+  </div>
+<% } %>
+
+<%- include("partials/footer.ejs") %>

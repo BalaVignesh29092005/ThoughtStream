@@ -1,0 +1,89 @@
+<%- include("partials/header.ejs") %>
+  <link href="/css/explore.css" rel="stylesheet">
+
+  <div class="container mt-5 pt-5 col-8">
+    <div class="d-flex justify-content-center mt-2 ms-5 col-10">
+      <div class="mt-2 ps-5 ">
+        <div class="d-flex flex-wrap gap-3">
+          <% if(!(locals.selected)){ selected="all" ; } %>
+            <form action="/explore" method="POST" class="pe-2">
+              <input type="hidden" name="filter" value="all">
+              <button type="submit" class="btn <%= selected === 'all' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="all">All</button>
+            </form>
+
+            <!-- Corrected spelling from buisness to business -->
+            <form action="/explore" method="POST" class="pe-2">
+              <input type="hidden" name="filter" value="business">
+              <button type="submit" class="btn <%= selected === 'buisness' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="buisness">Buisness</button>
+            </form>
+
+            <form action="/explore" method="POST" class="px-2">
+              <input type="hidden" name="filter" value="education">
+              <button type="submit" class="btn <%= selected === 'education' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="education">
+                Education
+              </button>
+            </form>
+
+            <form action="/explore" method="POST" class="px-2">
+              <input type="hidden" name="filter" value="sports">
+              <button type="submit" class="btn <%= selected === 'sports' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="sports">Sports</button>
+            </form>
+
+            <form action="/explore" method="POST" class="px-2">
+              <input type="hidden" name="filter" value="technology">
+              <button type="submit" class="btn <%= selected === 'technology' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="technology">Technology</button>
+            </form>
+
+            <form action="/explore" method="POST" class="px-2">
+              <input type="hidden" name="filter" value="environment">
+              <button type="submit" class="btn <%= selected === 'environment' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="environment">Environment</button>
+            </form>
+
+            <form action="/explore" method="POST" class="px-2">
+              <input type="hidden" name="filter" value="others">
+              <button type="submit" class="btn <%= selected === 'others' ? 'btn-primary' : 'btn-outline-primary'%>"
+                id="others">Others</button>
+            </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-5 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <% let index=0; %>
+          <% blogpreviews.forEach(blog=> { %>
+            <% if(index !=0) { %>
+              <hr class="my-4">
+              <% } %>
+                <div class="post-preview">
+                  <form id="myForm-<%= index %>" action="/view" method="get" style="display: none;">
+                    <input type="hidden" name="blogIndex" value="<%= index %>" />
+                    <input type="hidden" name="sourceType" value="explore" />
+                  </form>
+                  <h2 class="post-title" onclick="document.getElementById('myForm-<%= index %>').submit();">
+                    <%= blog.title %>
+                  </h2>
+                  <p class="post-meta">
+                    Posted by <%= blog.author %>
+                      <p>
+                        <%= blog.content.slice(0,215) %>...
+                      </p>
+                      on <%= blog.publishDate %>
+                  </p>
+                </div>
+                <% index++; %>
+                  <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <%- include("partials/footer.ejs") %>

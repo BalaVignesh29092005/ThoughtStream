@@ -1,6 +1,6 @@
 # Thoughtstream
 
-Litlog is a lightweight, local blog platform built with Node.js, Express, and EJS templating. It provides a clean space to create, browse, and manage blog posts, with all data held in memory for the duration of a single session — no database setup required.
+Thoughtstream is a lightweight, local blog platform built with Node.js, Express, and EJS templating. It provides a clean space to create, browse, and manage blog posts, with all data held in memory for the duration of a single session — no database setup required.
 
 > **Note:** Litlog is a session-based application. All content is stored in memory and will be lost when the server restarts.
 
